@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+         <record id="bs_sale_order_tree" model="ir.ui.view">
+             <field name="name">bs.sale.order.tree.inherit</field>
+             <field name="model">sale.order</field>
+             <field name="inherit_id" ref="sale.view_order_tree"/>
+             <field name="arch" type="xml">
+                 <field name="partner_id" position="before">
+                     <field name="partner_code"/>
+                 </field>
+                  <field name="partner_id" position="after">
+                     <field name="bs_acct_no"/>
+                 </field>
+             </field>
+         </record>
+
+        <record id="bs_sale_order_form" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_draft']" position="replace">
+                    <button name="action_draft" states="cancel,reject" type="object" string="Set to Quotation"/>
+                </xpath>
+
+                <xpath expr="//button[@name='%(sale.action_view_sale_advance_payment_inv)d']" position="replace">
+                    <button name="action_authorize_digitally" type='object' class="oe_highlight"
+                        string='Verify' groups="buildmart.group_account_authorize"
+                        help="Verified Sale, will allow to print sale with pre-set Signatory."
+                        attrs="{'invisible': [('show_authorize','!=', True)]}"/>
+                    <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
+                            type="action" class="btn-primary"
+                            attrs="{'invisible': [('invoice_status', '!=', 'to invoice')]}"/>
+	                <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
+                        type="action" context="{'default_advance_payment_method': 'percentage'}"
+                        attrs="{'invisible': ['|',('invoice_status', '!=', 'no'),
+                        ('state', 'in', ['sale','done'])]}"/>
+                </xpath>
+               <!-- <xpath expr="//button[@name='action_cancel']" position="attributes">
+                    <attribute name="invisible"> ['|', ('state', 'not in', ['draft', 'sent','sale','accept']), ('id', '=', False)]</attribute>
+                </xpath>-->
+                <field name="payment_term_id" position="attributes">
+                	<attribute name="required">1</attribute>
+                </field>
+                <field name="payment_term_id" position="after">
+                    <field name="show_authorize" invisible="1"/>
+                    <field name="click_upload_id" domain="['|',('partner_id','=',False),('partner_id','=',partner_id)]"/>
+                    <field name="price_enq_id" domain="['|',('partner_id','=',False),('partner_id','=',partner_id)]"/>
+                </field>
+                
+                <field name="team_id" position="after">
+                    <field name="is_transport" widget="radio" class="oe_edit_only"
+                         options="{'horizontal': true}" required="1"/>
+                    <field name="is_hamali" widget="radio" class="oe_edit_only"
+                         options="{'horizontal': true}" required="1"/>
+<!--                    <field name="is_enabled_roundoff" />-->
+                </field>
+<!--                <xpath expr="//field[@name='tax_totals_json']" position="before">-->
+<!--                    -->
+<!--                    <field name="amount_round_off" widget="monetary" options="{'currency_field': 'currency_id'}"-->
+<!--                           attrs="{'invisible':[('is_enabled_roundoff', '!=',True)]}"/>-->
+<!--                </xpath>-->
+<!--                <field name="partner_shipping_id" position="attributes">-->
+<!--                    <attribute name="context">{'default_type':'delivery', 'show_address': 1}</attribute>-->
+<!--                    <attribute name="invisible">[('partner_id','!=',True)]</attribute>-->
+<!--                </field>-->
+                <field name="partner_shipping_id" position="replace">
+                    <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address"
+                           attrs="{'invisible':[('partner_id','=',False)]}"
+                           context="{'default_type':'delivery','show_address':1}" options='{"always_reload": True}'/>
+                    <field name="custom_del_address"
+                           attrs="{'readonly':[('state','not in',['draft'])]}"/>
+                </field>
+                <field name="partner_id" position="after">
+                    <field name="sitename_id" attrs="{'readonly':[('state','=','done')]}"
+                    domain="[('company_id', '=', partner_id)]" options="{'no_create': True}"/>
+                </field>
+<!--                <xpath expr="//form/header" position="inside">-->
+<!--                    &lt;!&ndash;<button name="raise_rfqs" string="Raise RFQ" type="object"/>&ndash;&gt;-->
+<!--                    <button name="unprocess_so" string="Reset to Accepted" type="object"-->
+<!--                        attrs="{'invisible':[('state','!=','process')]}"/>-->
+<!--                </xpath>-->
+                <xpath expr="//form/sheet/div[@name='button_box']" position="inside">
+                   <button name="action_view_rfq" type="object" class="oe_stat_button" icon="fa-pencil-square-o" attrs="{'invisible': [('rfq_count', '=', 0)]}">
+                       <field name="rfq_count" widget="statinfo" string="RFQs"/>
+                   </button>
+                   
+                   <button name="action_view_transport" type="object" class="oe_stat_button" icon="fa-ship" attrs="{'invisible': ['|',('is_transport', '=', 'no'),('transport_count', '=', 0)]}">
+                       <field name="transport_count" widget="statinfo" string="Transport"/>
+                   </button>
+                   
+                   <button name="action_view_hamali" type="object" class="oe_stat_button" icon="fa-ship"
+                           attrs="{'invisible': ['|',('is_hamali', '=', 'no'),('hamali_count', '=', 0)]}">
+                       <field name="hamali_count" widget="statinfo" string="Hamali"/>
+                   </button>
+                   
+                </xpath>
+                <field name="note" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <xpath expr="//notebook/page[last()]" position="after">
+                    <page string="T&amp;C" name="t_and_c">
+                        <field name="t_and_c" required="1">
+                            <tree editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="is_selected" />
+                                <field name="category"/>
+                                <field name="tandc_id" required="1"/>
+                            </tree>
+                        </field>
+                        <field name="note" placeholder="Terms and conditions.."/>
+                    </page>
+                    <page name="bulk_enq" string="Bulk Enquiry" attrs="{'invisible':[('is_bulk_enq','!=',True)]}">-->
+                        <field name="is_bulk_enq" invisible="1"/>
+                        <group>
+                            <field name="enq_project_type"/>
+                            <field name="enq_total_req"/>
+                            <field name="enq_monthly_req" />
+                            <field name="enq_current_req" />
+                            <field name="enq_approved_brands"/>
+                            <field name="enq_contact_name"/>
+                            <field name="enq_contact_phone"/>
+                            <field name="enq_contact_email"/>
+                            <field name="enq_del_address"/>
+                            <field name="enq_landmark"/>
+                            <field name="enq_city"/>
+                            <field name="enq_district_id"/>
+                            <field name="enq_state_id"/>
+                            <field name="enq_pincode"/>
+                            <field name="enq_gstin"/>
+                            <field name="enq_gst_attachment"/>
+                            <field name="enq_reg_address"/>
+                        </group>
+                    </page>
+                </xpath>
+                <field name="client_order_ref" position="attributes">
+                    <attribute name="required">1</attribute>
+                </field>
+                <field name="client_order_ref" position="after">
+                    <field name="client_ref_date" required="1"/>
+                </field>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']" position="replace">
+                	<field 
+                	name="product_uom_qty" 
+                	sum="Total" 
+                	decoration-info="(not display_type and invoice_status == 'to invoice')" 
+                	decoration-bf="(not display_type and invoice_status == 'to invoice')" 
+                	context="{ 'partner_id': parent.partner_id,'quantity': product_uom_qty, 'pricelist': parent.pricelist_id,'uom': product_uom, 'company_id': parent.company_id  }"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='qty_delivered']" position="replace">
+                	<field name="qty_delivered" sum="Total" 
+                	decoration-info="(not display_type and invoice_status == 'to invoice')" 
+                	decoration-bf="(not display_type and invoice_status == 'to invoice')" 
+                	string="Delivered" 
+                	attrs="{ 'column_invisible': [('parent.state', 'not in', ['sale', 'done'])],'readonly': [('qty_delivered_method', '!=', 'manual')]}" optional="show"/>
+            	</xpath>
+            	<xpath expr="//field[@name='order_line']/tree/field[@name='qty_delivered']" position="replace">
+                	<field name="qty_invoiced" sum="Total" decoration-info="(not display_type and invoice_status == 'to invoice')" decoration-bf="(not display_type and invoice_status == 'to invoice')" string="Invoiced" attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])]}" optional="show"/>
+            	</xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="after">
+                    <field name="price_reduce_taxinc" string="Unit Incl. Tax"/>
+            	</xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
+                    <field name="hsn_code"/>
+            	</xpath>
+            </field>
+        </record>
+        
+        <record id="transport_tree_view" model="ir.ui.view">
+	        <field name="name">transport.tree</field>
+	        <field name="model">order.transport</field>
+	        <field name="arch" type="xml">
+	            <tree string="RFQs" editable='top'>
+	                <field name="order_id" readonly="1"/>
+	                <field name="invoice_id" readonly="1"/>
+	                <field name="bill_no"/>
+	                <field name="vehicle_no" readonly="1"/>
+	                <field name="driver_no" readonly="1"/>
+	                <field name="partner_id" readonly="1"/>
+	                <field name="sitename_id" readonly="1"/>
+	                <field name="partner_transporter"/>
+	                <field name="quantity" />
+	                <field name="product_uom_id" readonly="1"/>
+	                <field name="amount_total" widget="monetary" options="{'currency_field': 'currency_id'}" />
+	                <field name="user_id" readonly="1"/>
+	                <field name="approved_date" readonly="1"/>
+	                <field name="state" readonly="1"/>
+	                <button name="update_transport" 
+	                		type="object" class="oe_stat_button" icon="fa-forward"
+	                		title="Mark Paid"
+	                		groups="buildmart.group_trasport_approver"
+	                		attrs="{'invisible':[('state','!=','draft')]}">
+                   </button>
+	            </tree>
+	        </field>
+	    </record>
+	    
+	    <record id="bs_transport_search" model="ir.ui.view">
+            <field name="name">order.transport.search</field>
+            <field name="model">order.transport</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="state"/>
+                    <filter string="Paid" name="state" domain="[('state', '=', 'post')]"/>
+                    <separator/>
+                    <filter string="Un Paid" name="state" domain="[('state', '=', 'draft')]"/>
+                </search>
+            </field>
+        </record>
+        
+	    <record id="transport_action" model="ir.actions.act_window">
+	        <field name="name">Transport</field>
+	        <field name="res_model">order.transport</field>
+	        <field name="view_mode">tree,form</field>
+	        <field name="search_view_id" ref="buildmart.bs_transport_search"/>
+	    </record>
+	    
+	    <record id="transport_report_view_pivot" model="ir.ui.view">
+             <field name="name">transport.report.pivot</field>
+             <field name="model">order.transport</field>
+             <field name="arch" type="xml">
+                 <pivot string="Tranport Analysis" display_quantity="1" sample="1">
+                     <field name="partner_transporter" type="row"/>
+                     <field name="order_id" type="measure"/>
+                     <field name="invoice_id" type="measure"/>
+                     <!-- <field name="bill_no" type="measure"/> -->
+                     <field name="amount_total" type="measure"/>
+                 </pivot>
+             </field>
+        </record>
+        
+        <record id="transport_cohort_view" model="ir.ui.view">
+            <field name="name">order.transport.cohort.view</field>
+            <field name="model">order.transport</field>
+            <field name="arch" type="xml">
+                <cohort string="Report" date_start="create_date" date_stop="approved_date" interval="day" mode="churn" sample="1"/>
+            </field>
+        </record>
+	    
+	    <record id="transport_report_view_dashboard" model="ir.ui.view">
+            <field name="name">transport.report.view.dashboard</field>
+            <field name="model">order.transport</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <dashboard sample="1">
+                	<group col="1">
+                		<widget name="grid_view" title="Grid"/>
+                	</group>
+                    <view type="cohort" ref="transport_cohort_view"/>
+                    <group>
+                        <group>
+                            <aggregate name="tranport_total" string="Total" field="amount_total" help="Total Amount" widget="monetary"/>
+                            <aggregate name="tranport_quantity" string="Quantity" field="quantity" help="Total Quantity"/>
+                            <aggregate name="order_id_confirmed_orders" field="order_id" string="Orders"/>
+                            <aggregate name="invoice_id_confirmed_invoices" field="invoice_id" string="Invoices"/>
+                            <aggregate name="customers" string="# Customers" field="partner_id" clickable="False"/>
+                            <aggregate name="partner_transporter" string="# Transporter" field="partner_transporter" clickable="False"/>
+                        </group>
+                        <group col="1">
+                            <widget name="pie_chart" title="Orders" attrs="{'groupby': 'order_id'}"/>
+                            <widget name="pie_chart" title="Bill" attrs="{'groupby': 'bill_no'}"/>
+                            <widget name="pie_chart" title="Transporter" attrs="{'groupby': 'partner_transporter'}"/>
+                            <widget name="pie_chart" title="Payment" attrs="{'groupby': 'state'}"/>
+                        </group>
+                    </group>
+                    <view type="pivot" ref="transport_report_view_pivot"/>
+                </dashboard>
+            </field>
+        </record>
+        
+        <record id="action_transport_report" model="ir.actions.act_window">
+        	<field name="name">Transport Analysis</field>
+            <field name="res_model">order.transport</field>
+            <field name="view_mode">dashboard,tree</field>
+            <field name ="view_id" ref="transport_report_view_dashboard"/>
+            <field name="search_view_id" ref="buildmart.bs_transport_search"/>
+            <field name="domain">[('order_id.is_transport', '=', 'yes')]</field>
+        </record>
+        <menuitem
+            id="menu_transport_report_dashboard"
+            name="Transport Dashboard"
+            action="action_transport_report"
+            parent="sale.menu_sale_report"
+            sequence="3"/>
+            
+            
+        <!--  Hamali Charges -->
+         <record id="hamali_tree_view" model="ir.ui.view">
+	        <field name="name">hamali.tree</field>
+	        <field name="model">order.hamali</field>
+	        <field name="arch" type="xml">
+	            <tree string="RFQs" editable='top'>
+	                <field name="order_id" readonly="1"/>
+	                <field name="invoice_id" readonly="1"/>
+	                <field name="bill_no"/>
+	                <field name="vehicle_no" readonly="1"/>
+	                <field name="driver_no" readonly="1"/>
+	                <field name="partner_id" readonly="1"/>
+	                <field name="sitename_id" readonly="1"/>
+	                <field name="partner_transporter"/>
+	                <field name="quantity" />
+	                <field name="product_uom_id" readonly="1"/>
+	                <field name="amount_total" widget="monetary" options="{'currency_field': 'currency_id'}" />
+	                <field name="user_id" readonly="1"/>
+	                <field name="approved_date" readonly="1"/>
+	                <field name="state" readonly="1"/>
+	                <button name="update_hamali" 
+	                		type="object" class="oe_stat_button" icon="fa-forward"
+	                		title="Mark Paid"
+	                		groups="buildmart.group_trasport_approver"
+	                		attrs="{'invisible':[('state','!=','draft')]}">
+                   </button>
+	            </tree>
+	        </field>
+	    </record>
+	    
+	    <record id="bs_hamali_search" model="ir.ui.view">
+            <field name="name">order.hamali.search</field>
+            <field name="model">order.hamali</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="state"/>
+                    <filter string="Paid" name="state" domain="[('state', '=', 'post')]"/>
+                    <separator/>
+                    <filter string="Un Paid" name="state" domain="[('state', '=', 'draft')]"/>
+                </search>
+            </field>
+        </record>
+        
+	    <record id="hamali_action" model="ir.actions.act_window">
+	        <field name="name">Hamali</field>
+	        <field name="res_model">order.hamali</field>
+	        <field name="view_mode">tree,form</field>
+	        <field name="search_view_id" ref="buildmart.bs_hamali_search"/>
+	    </record>
+	    
+	     <record id="hamali_report_view_pivot" model="ir.ui.view">
+             <field name="name">hamali.report.pivot</field>
+             <field name="model">order.hamali</field>
+             <field name="arch" type="xml">
+                 <pivot string="Hamali Analysis" display_quantity="1" sample="1">
+                     <field name="partner_transporter" type="row"/>
+                     <field name="order_id" type="measure"/>
+                     <field name="invoice_id" type="measure"/>
+                     <!-- <field name="bill_no" type="measure"/> -->
+                     <field name="amount_total" type="measure"/>
+                 </pivot>
+             </field>
+        </record>
+        
+        <record id="hamali_cohort_view" model="ir.ui.view">
+            <field name="name">order.hamali.cohort.view</field>
+            <field name="model">order.hamali</field>
+            <field name="arch" type="xml">
+                <cohort string="Report" date_start="create_date" date_stop="approved_date" interval="day" mode="churn" sample="1"/>
+            </field>
+        </record>
+	    
+	     <record id="hamali_report_view_dashboard" model="ir.ui.view">
+            <field name="name">hamali.report.view.dashboard</field>
+            <field name="model">order.hamali</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <dashboard sample="1">
+                	<group col="1">
+                		<widget name="grid_view" title="Grid"/>
+                	</group>
+                    <view type="cohort" ref="hamali_cohort_view"/>
+                    <group>
+                        <group>
+                            <aggregate name="tranport_total" string="Total" field="amount_total" help="Total Amount" widget="monetary"/>
+                            <aggregate name="tranport_quantity" string="Quantity" field="quantity" help="Total Quantity"/>
+                            <aggregate name="order_id_confirmed_orders" field="order_id" string="Orders"/>
+                            <aggregate name="invoice_id_confirmed_invoices" field="invoice_id" string="Invoices"/>
+                            <aggregate name="customers" string="# Customers" field="partner_id" clickable="False"/>
+                            <aggregate name="partner_transporter" string="# Transporter" field="partner_transporter" clickable="False"/>
+                        </group>
+                        <group col="1">
+                            <widget name="pie_chart" title="Orders" attrs="{'groupby': 'order_id'}"/>
+                            <widget name="pie_chart" title="Bill" attrs="{'groupby': 'bill_no'}"/>
+                            <widget name="pie_chart" title="Transporter" attrs="{'groupby': 'partner_transporter'}"/>
+                            <widget name="pie_chart" title="Payment" attrs="{'groupby': 'state'}"/>
+                        </group>
+                    </group>
+                    <view type="pivot" ref="hamali_report_view_pivot"/>
+                </dashboard>
+            </field>
+        </record>
+        
+        <record id="action_hamali_report" model="ir.actions.act_window">
+        	<field name="name">hamali Analysis</field>
+            <field name="res_model">order.hamali</field>
+            <field name="view_mode">dashboard,tree</field>
+            <field name ="view_id" ref="transport_report_view_dashboard"/>
+            <field name="search_view_id" ref="buildmart.bs_hamali_search"/>
+            <field name="domain">[('order_id.is_hamali', '=', 'yes')]</field>
+        </record>
+        <menuitem
+            id="menu_hamali_report_dashboard"
+            name="Hamali Dashboard"
+            action="action_hamali_report"
+            parent="sale.menu_sale_report"
+            sequence="4"/>
+    </data>
+</odoo>

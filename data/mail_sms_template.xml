@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="bs_payment_received" model="mail.template">
+            <field name="name">Payment Received</field>
+            <field name="email_from">info@buildmart.com</field>
+            <field name="email_to">info@buildmart.com</field>
+            <field name="subject">Payment Received {{ object.name }}</field>
+            <field name="model_id" ref="model_sale_order"/>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p>Your payment has been received for order <t t-out="object.name or ''" />. In case of any clarification, 
+    please email us at <t t-out="object.company_id.cust_care_email or ''" /> / call<t t-out="object.company_id.cust_care_phone or ''"/>.</p>
+</div></field>
+        </record>
+        
+        <record id="bs_price_enquiry_mail" model="mail.template">
+            <field name="name">Price Enquiry Placed</field>
+            <field name="email_from">info@buildmart.com</field>
+            <field name="email_to">info@buildmart.com</field>
+            <field name="subject">Price Enquiry Placed</field>
+            <field name="model_id" ref="model_sale_order"/>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p>
+    	Your price Enquiry has been placed successfully, 
+    	we shall revert shortly with price quotation. 
+    	In case of any further clarification, 
+    	please email us at <t t-out="object.company_id.cust_care_email or ''" />  /call <t t-out="object.company_id.cust_care_phone or ''"/>
+   	</p>
+</div></field>
+        </record>
+        
+        <record id="bs_order_rejected" model="mail.template">
+            <field name="name">Order Rejected</field>
+            <field name="email_from">info@buildmart.com</field>
+            <field name="email_to">info@buildmart.com</field>
+            <field name="subject">Order Rejected {{ object.name }}</field>
+            <field name="model_id" ref="model_sale_order"/>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p>Quotation <t t-out="object.name or ''" /> has been rejected by customer <t t-out="object.partner_id.name or ''" />
+	</p>
+</div></field>
+        </record>
+        
+        <record id="bs_quotation_rejected" model="mail.template">
+            <field name="name">Quotation Rejected</field>
+            <field name="email_from">info@buildmart.com</field>
+            <field name="email_to">info@buildmart.com</field>
+            <field name="subject">Quotation Rejected {{ object.name }}</field>
+            <field name="model_id" ref="model_sale_order"/>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p>Quotation <t t-out="object.name or ''" /> has been rejected by customer <t t-out="object.partner_id.name or ''" />.</p>
+</div></field>
+        </record>
+        
+        <record id="bs_order_confirmed" model="mail.template">
+            <field name="name">Order Confirmed</field>
+            <field name="email_from">info@buildmart.com</field>
+            <field name="email_to">info@buildmart.com</field>
+            <field name="subject">Order Confirmed {{ object.name }}</field>
+            <field name="model_id" ref="model_sale_order"/>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p>Thank you for Order confirmation <t t-out="object.name or ''" /> we shall process the same at the earliest possible.
+     In case of any further clarification, please email us at <t t-out="object.company_id.cust_care_email or ''" />  / call at <t t-out="object.company_id.cust_care_phone or ''" /></p>
+</div></field>
+        </record>
+        
+        <record id="bs_quotation_accepted" model="mail.template">
+            <field name="name">Quotation Accepted</field>
+            <field name="email_from">info@buildmart.com</field>
+            <field name="email_to">info@buildmart.com</field>
+            <field name="subject">Quotation Accepted {{ object.name }}</field>
+            <field name="model_id" ref="model_sale_order"/>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p>Quotation <t t-out="object.name or ''" /> has been accepted by customer <t t-out="object.partner_id.name or ''" />. Please process it at the earliest.</p>
+</div></field>
+        </record>
+        
+         <record id="bs_reset_password_email" model="mail.template">
+            <field name="name">Reset Password</field>
+            <field name="email_from">info@buildmart.com</field>
+            <field name="email_to">info@buildmart.com</field>
+            <field name="subject">Reset Password</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p>Reset Password</p>
+</div></field>
+        </record>
+        
+        <record id="bs_email_otp" model="mail.template">
+            <field name="name">OTP Verification</field>
+            <field name="email_from">info@buildmart.com</field>
+            <field name="email_to">info@buildmart.com</field>
+            <field name="subject">OTP Verification</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p>OTP Verification</p>
+</div></field>
+        </record>
+        
+        <record id="bs_email_new_rfq_generate" model="mail.template">
+            <field name="name">New RFQ generated</field>
+            <field name="email_from">info@buildmart.com</field>
+            <field name="email_to">info@buildmart.com</field>
+            <field name="subject">New RFQ generated</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p>New RFQ has been generated with Ref #{{ object.name }}. Please update and process it soon.<br/></p>
+</div></field>
+        </record>
+        
+        <record id="bs_email_signup_otp" model="mail.template">
+            <field name="name">Signup OTP Verification</field>
+            <field name="email_from">info@buildmart.com</field>
+            <field name="email_to">info@buildmart.com</field>
+            <field name="subject">Sign Up OTP Verification</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p>Sign Up OTP Verification</p>
+</div></field>
+        </record>
+        
+        <record id="sale.email_template_edi_sale" model="mail.template">
+            <field name="name">Sales Order: Send by email</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="subject">{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and (ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ object.name or 'n/a' }})</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        <t t-set="doc_name" t-value="'quotation' if object.state in ('draft', 'sent') else 'order'"/>
+        Hello,
+        <br/><br/>
+        Your
+        <t t-if="ctx.get('proforma')">
+            Pro forma invoice for <t t-out="doc_name or ''">quotation</t> <strong t-out="object.name or ''"></strong>
+            <t t-if="object.origin">
+                (with reference: <t t-out="object.origin or ''"></t> )
+            </t>
+            amounting in <strong t-out="format_amount(object.amount_total, object.pricelist_id.currency_id) or ''"></strong> is available.
+        </t>
+        <t t-else="">
+            <t t-out="doc_name or ''">quotation</t> <strong t-out="object.name or ''"></strong>
+            <t t-if="object.origin">
+                (with reference: <t t-out="object.origin or ''">S00052</t> )
+            </t>
+            amounting in <strong t-out="format_amount(object.amount_total, object.pricelist_id.currency_id) or ''"></strong> is ready for review.
+        </t>
+        <br/><br/>
+        Do not hesitate to contact us if you have any questions.
+        <br/>
+    </p>
+</div>
+            </field>
+            <field name="report_template" ref="sale.action_report_saleorder"/>
+            <field name="report_name">{{ (object.name or '').replace('/','_') }}</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+        
+        
+     <record id="stock.mail_template_data_delivery_confirmation" model="mail.template">
+        <field name="name">Delivery: Send by Email</field>
+        <field name="model_id" ref="model_stock_picking"/>
+        <field name="subject">{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})</field>
+        <field name="partner_to">{{ object.partner_id.email and object.partner_id.id or object.partner_id.parent_id.id }}</field>
+        <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Hello <t t-out="object.partner_id.name or ''">Brandon Freeman</t>,<br/><br/>
+        We are glad to inform you that your order has been shipped.
+        <t t-if="hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref">
+            Your tracking reference is
+            <strong>
+            <t t-if="object.carrier_tracking_url">
+                <t t-set="multiple_carrier_tracking" t-value="object.get_multiple_carrier_tracking()"/>
+                <t t-if="multiple_carrier_tracking">
+                    <t t-foreach="multiple_carrier_tracking" t-as="line">
+                        <br/><a t-att-href="line[1]" target="_blank" t-out="line[0] or ''"></a>
+                    </t>
+                </t>
+                <t t-else="">
+                    <a t-attf-href="{{ object.carrier_tracking_url }}" target="_blank" t-out="object.carrier_tracking_ref or ''"></a>.
+                </t>
+            </t>
+            <t t-else="">
+                <t t-out="object.carrier_tracking_ref or ''"></t>.
+            </t>
+            </strong>
+        </t>
+        <br/><br/>
+        Please find your delivery order attached for more details.<br/><br/>
+        Thank you,
+        <t t-if="user.signature">
+            <br />
+            <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+        </t>
+    </p>
+</div>
+        </field>
+        <field name="report_template" ref="stock.action_report_delivery"/>
+        <field name="report_name">{{ (object.name or '').replace('/','_') }}</field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+        
+        <!-- SMS -->
+        <record id="sms_template_order_received" model="sms.template">
+            <field name="name">Payment has been received for Order</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="body">Your payment has been received for order {{object.name }}. In case of any clarification, 
+    please email us at {{object.company_id.cust_care_email }} / call {{ object.company_id.cust_care_phone }}</field>
+        </record>
+        
+        <record id="sms_template_enquiry_place" model="sms.template">
+            <field name="name">Your price Enquiry has been placed successfully</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="body">Your price Enquiry has been placed successfully, 
+            we shall revert shortly with price quotation. In case of support, email us at {{object.company_id.cust_care_email}} / call {{object.company_id.cust_care_phone}}.</field>
+        </record>
+        
+        <record id="sms_template_order_rejected" model="sms.template">
+            <field name="name">Your order has been successfully rejected</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="body">Your order has been successfully rejected {{object.name}}, In case of support, please email us at {{object.company_id.cust_care_email}} / call {{object.company_id.cust_care_phone}}.</field>
+        </record>
+        
+        <record id="sms_template_new_quote" model="sms.template">
+            <field name="name">New RFQ generated</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="body">New RFQ has been generated with Ref #{{object.name}}. Please update and process it soon.</field>
+        </record>
+        
+        <record id="sms_template_quote_accepted" model="sms.template">
+            <field name="name">Quotation accepted</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="body">Quotation {{ object.name }} has been accepted by customer {{ object.partner_id.name }}. Please process it at the earliest.</field>
+        </record>
+        
+        <record id="sms_template_order_confirmation" model="sms.template">
+            <field name="name">Order confirmation</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="body">Thank you for Order confirmation {{ object.name }} we shall process the same at the earliest possible. In case of any further clarification, please email us at {{object.company_id.cust_care_email}} / call {{object.company_id.cust_care_phone}}</field>
+        </record>
+        
+        <record id="sms_template_quote_rejected" model="sms.template">
+            <field name="name">Quotation rejected.</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="body">Quotation {{ object.name }} has been rejected by customer {{ object.partner_id.name }}.</field>
+        </record>
+        
+        <record id="sms_template_login_otp" model="sms.template">
+            <field name="name">otp</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="body">OTP</field>
+        </record>
+        
+        <record id="sms_template_signup_otp" model="sms.template">
+            <field name="name">otp</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="body">Signup OTP</field>
+        </record>
+
+        <record id="bs_contacts_verify" model="mail.template">
+            <field name="name">Verify Contacts</field>
+            <field name="email_from">info@buildmart.com</field>
+            <field name="email_to">info@buildmart.com</field>
+            <field name="subject">Pending Verification</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="body_html" type="html">
+                <p>Hello</p>
+            </field>
+        </record>
+    </data>
+</odoo>

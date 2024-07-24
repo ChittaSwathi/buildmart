@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="bs_ecomm_categ_search" model="ir.ui.view">
+            <field name="name">product.public.category.search</field>
+            <field name="model">product.public.category</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <filter string="Megamenu" name="active" domain="[('parent_id', '=', False)]"/>
+                    <separator/>
+                    <group expand='0' string='Group by...'>
+                        <filter string='Parent Category' name="group_by_parent_id"
+                                context="{'group_by': 'parent_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="bs_ecomm_categ_form" model="ir.ui.view">
+            <field name="name">product.public.category.form.inherit</field>
+            <field name="model">product.public.category</field>
+            <field name="inherit_id" ref="website_sale.product_public_category_form_view"/>
+            <field name="arch" type="xml">
+                <field name="sequence" position="after">
+                    <field name="allcategs_image" widget="image" attributes="{'required':[('parent_id','!=',True)]}"
+                           style="max-width:150px !important;max-height:150px !important;"/>
+                    <field name="megamenu" attributes="{'invisible':[('parent_id','!=',True)]}"/>
+                    <field name="megamenu_sequence" attributes="{'invisible':[('parent_id','!=',True)]}"/>
+                    <field name="customer_type"/>
+                    <field name="l2_view"/>
+                    <field name="category_slug"/>
+                    <field name="s3_url"/>
+                </field>
+                <xpath expr='//div[hasclass("oe_left")]' position="after">
+                    <div class="oe_right">
+                        <group>
+                            <field name="is_coming_soon"/>
+                            <field name="is_trending"/>
+                            <field name="pdp_template_id" domian="[('type','=','qweb')]"
+                                   attrs="{'invisible':[('parent_id','=',False)]}"
+                                   options="{'no_create_edit': True}"/>
+                            <field name="categ_type_ids" widget="many2many_tags"
+                                   attrs="{'invisible':[('parent_id','!=',False)]}"/>
+                            <field name="top_brand_ids" widget="many2many_tags"  options="{'no_create': True}"/>
+                            <field name="top_vendor_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                        </group>
+                    </div>
+                </xpath>
+                <xpath expr="//form/sheet" position="inside">
+                    <notebook>
+                        <page name="branding" string="Banners &amp; Branding">
+                            <field name="banner_ids" class="o_website_sale_image_list"
+                               mode="kanban" options="{'create_text':'Add a Media'}" nolabel="1"/>
+                        </page>
+                        <page name="specifications" string="Specifications">
+                            <field name="specification_ids" attrs="{'invisible':[('parent_id','!=',False)]}">
+                                <tree editable="bottom">
+                                    <field name="attribute_id"/>
+                                    <field name="value_ids" widget="many2many_tags"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="description" string="Products Description">
+                            <field name="products_description"/>
+                        </page>
+                        <page name="detailed_info" string="Category Information">
+                            <field name="detailed_info"/>
+                        </page>
+                    </notebook>
+                </xpath>
+            </field>
+        </record>
+
+         <record id="bs_ecomm_categ_tree" model="ir.ui.view">
+            <field name="name">product.public.category.tree.inherit</field>
+            <field name="model">product.public.category</field>
+            <field name="inherit_id" ref="website_sale.product_public_category_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="display_name" position="after">
+                    <field name="categ_type_ids" widget="many2many_tags"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- Generic promotions starts -->
+        <record id="bs_gen_prom_form" model="ir.ui.view">
+            <field name="name">bs.generic.promotion.form</field>
+            <field name="model">bs.generic.promotion</field>
+            <field name="arch" type="xml">
+                <form string="Promotion">
+                    <sheet>
+                        <group>
+                            <field name="content"/>
+                            <field name="s3_image_url"/>
+                            <field name="image_redirection_url"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="bs_gen_prom_tree" model="ir.ui.view">
+            <field name="name">bs.generic.promotion.tree</field>
+            <field name="model">bs.generic.promotion</field>
+            <field name="arch" type="xml">
+                <tree string="Promotions" >
+                    <field name="content"/>
+                    <field name="image_redirection_url"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="bs_gen_prom_action" model="ir.actions.act_window">
+            <field name="name">BS Generic Promotions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">bs.generic.promotion</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="bs_gen_prom_tree"/>
+        </record>
+
+        <menuitem action="bs_gen_prom_action" id="bs_gen_prom_menu_id" parent="website.menu_dashboard"/>
+        <!-- Generic Promotions ends -->
+
+    </data>
+</odoo>

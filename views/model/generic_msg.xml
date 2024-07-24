@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="bs_generic_whatsapp_msg_form" model="ir.ui.view">
+        <field name="name">bs.generic.whatsapp.msg.form</field>
+        <field name="model">bs.generic.whatsapp.msg</field>
+        <field name="arch" type="xml">
+            <form string="Whatsapp Message" >
+                <group>
+                    <field name="mobile"/>
+                    <field name="message"/>
+                </group>
+                <footer>
+                    <button name="action_send_message" type="object" string="Send"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="bs_generic_whatsapp_msg_tree" model="ir.ui.view">
+        <field name="name">bs.generic.whatsapp.msg.tree</field>
+        <field name="model">bs.generic.whatsapp.msg</field>
+        <field name="arch" type="xml">
+            <tree string="Whatsapp Message" >
+                <field name="mobile"/>
+                <field name="message"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="bs_generic_whatsapp_msg_action" model="ir.actions.act_window">
+        <field name="name">Generic Whatsapp Messages</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">bs.generic.whatsapp.msg</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="buildmart.bs_generic_whatsapp_msg_form"/>
+    </record>
+
+
+
+</odoo>

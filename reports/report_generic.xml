@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- inherited - For partner ledger customer name -->
+    <template id="bs_line_template" inherit_id="account_reports.line_template">
+        <xpath expr="//span[hasclass('account_report_line_name')]/t" position="replace">
+            <t t-if="not line.get('action_id')" t-esc="line.get('name')[:18]"/>
+        </xpath>
+    </template>
+
+    <template id="bs_search_template" inherit_id="account_reports.search_template">
+        <xpath expr="//div[last()]" position="after">
+            <div class="btn-group dropdown js_account_report_bool_filter" t-if="options.get('report_name') == 'account.partner.ledger'">
+                <input type="checkbox" id="display_sitename" name="display_sitename" />
+                <label for="display_sitename"> Display Sitename</label>
+            </div>
+        </xpath>
+    </template>
+</odoo>

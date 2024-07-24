@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+     <template id="bs_email_designer_snippets" inherit_id="mass_mailing.email_designer_snippets">
+        <xpath expr="//div[@id='email_designer_themes']" position="inside">
+            <div data-name="bs" data-img="/buildmart/static/src/images/BSLogoDark"
+                 data-images-info='{"logo": {"format": "png"}, "all": {"module": "mass_mailing_themes"}}'>
+                <t t-call="buildmart.theme_bs1_template"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="theme_bs1_template">
+        <a target="_blank" href="https://buildmart.com/">
+            <img src="/mass_mailing_themes/static/src/img/theme_bignews/s_default_image_block_banner.jpg" alt="Cover image" class="img-fluid mx-auto d-block" loading="lazy" data-original-title="" title="" aria-describedby="tooltip448872" style="width: 690px;"/>
+        </a>
+        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general bg-200" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
+            <div cellspacing="0" cellpadding="0" class="container o_mail_table_styles">
+                <div class="row">
+                    <div class="col-lg o_mail_footer_social" data-original-title="" title="" aria-describedby="tooltip419468">
+                        <a aria-label="Facebook" title="Facebook" href="https://www.facebook.com/Odoo">
+                            <span class="fa fa-facebook" contenteditable="false" data-original-title="" title="" aria-describedby="tooltip358782" style="color: rgb(186, 0, 19) !important;">​</span>
+                        </a>&amp;nbsp;&amp;nbsp;
+                        <a style="margin-left:10px" aria-label="LinkedIn" title="LinkedIn" href="https://www.linkedin.com/company/odoo">
+                            <span class="fa fa-linkedin" contenteditable="false" data-original-title="" title="" aria-describedby="tooltip833621" style="color: rgb(186, 0, 19) !important;">​</span>
+                        </a>&amp;nbsp;&amp;nbsp;
+                        <a style="margin-left:10px" aria-label="Twitter" title="Twitter" href="https://twitter.com/Odoo">
+                            <span class="fa fa-twitter" contenteditable="false" data-original-title="" title="" aria-describedby="tooltip660674" style="color: rgb(186, 0, 19) !important;">​</span>
+                        </a>&amp;nbsp;&amp;nbsp;
+                        <a style="margin-left:10px" aria-label="Instagram" title="Instagram" href="https://www.instagram.com/explore/tags/odoo/">
+                            <span class="fa fa-instagram" contenteditable="false" data-original-title="" title="" aria-describedby="tooltip300105" style="color: rgb(186, 0, 19) !important;">​</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg o_mail_footer_links" data-original-title="" title="" aria-describedby="tooltip467910">
+                        <a role="button" href="/unsubscribe_from_list" class=" btn btn-link" data-original-title="" title="" aria-describedby="tooltip289688"><font style="color: rgb(186, 0, 19);" class="">Unsubscribe</font></a></div>
+                </div>
+                <div class="row">
+                    <div class="col-lg">
+                        <p class="o_mail_no_margin o_mail_footer_copy o_default_snippet_text">
+                            <span class="fa fa-copyright" role="img" aria-label="Copyright" title="Copyright" contenteditable="false">​</span>
+                            2021 All Rights Reserved
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+</odoo>

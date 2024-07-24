@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template>
+    <t t-name="buildmart.Grid">
+        <tree>
+            <field name="order_id" readonly="1" string="Order"/>
+            <field name="invoice_id" readonly="1" string="Invoice"/>
+            <field name="bill_no" string="Bill No."/>
+            <field name="partner_transporter" string="Transport Nmae"/>
+            <field name="quantity" readonly="1" string="Quantity"/>
+            <field name="product_uom_id" readonly="1" string="UoM"/>
+            <field name="amount_total" string="Amount" widget="monetary" options="{'currency_field': 'currency_id'}" />
+            <field name="state" readonly="1" string="Status"/>
+        </tree>
+    </t>
+</template>

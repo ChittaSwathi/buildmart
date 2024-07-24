@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	 <template id="bs_external_layout_clean">
+         <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
+            <div class="o_clean_header" >
+            	<div class="row">
+                    <div class="col-4">
+                        <img src="/buildmart/static/src/images/BSLogoDark.png" alt="" title="" class="img-fluid" style="max-width:100% !important"/>
+                        <ul class="list-unstyled" style="text-align: left;">
+                            <t t-if="report_model">
+                                <li t-att-style="'font-size: 22px;color: #1f4743;font-weight: bold;text-transform: uppercase;padding-top:20px;'
+                                    if 'Tax Invoice' in report_model
+                                    else 'font-size: 20px;color: #1f4743;font-weight: bold;text-transform: uppercase;'">
+                                    <t t-esc="report_model"/>
+                                </li>
+                            </t>
+                            <t t-if="report_model">
+                            	<t t-if="'Tax Invoice' in report_model">
+	                                <li style="font-size:12px">(Under Rule 48 of CGST Rules,2017)</li>
+	                            </t>
+                            </t>
+                        </ul>
+                    </div>
+                    <t t-if="qr_code">
+                        <div class="col-6" style="font-size:15px;">
+                            <t t-call="buildmart.bs_partner_address">
+                                <t t-set="company" t-value="company"/>
+                            </t>
+                        </div>
+                        <div class="col-2" >
+                            <img style="max-width:300px !important;min-height:130px !important"
+                                 t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' %
+                                        ('QR', einvoice.get('SignedQRCode'), 300, 300)"/>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="col-8" style="font-size:15px;">
+                            <t t-call="buildmart.bs_partner_address">
+                                <t t-set="company" t-value="company"/>
+                            </t>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+
+        <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout"
+             t-att-data-oe-model="o and o._name"
+             t-att-data-oe-id="o and o.id"
+             t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <div class="pt-2">
+                <!-- This div ensures that the address is not cropped by the header. -->
+                <t t-call="web.address_layout"/>
+            </div>
+            <main>
+                <t t-out="0"/>
+            </main>
+        </div>
+
+        <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout" >
+            <div class="text-center" style="font-size:13px;">
+                <ul class="list-inline">
+                    <li t-if="company.phone" class="list-inline-item d-inline"><span t-field="company.phone"/></li>|
+                    <li t-if="company.website" class="list-inline-item d-inline"><span t-field="company.website"/></li>|
+                    <li t-if="company.vat" class="list-inline-item d-inline">
+						<t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/>
+					</li>|
+					<li t-if="company.company_registry" class="list-inline-item d-inline">CIN: <t t-esc="company.company_registry"/></li>
+                </ul>
+
+                <t t-if="company.report_footer">
+                    <div name="financial_infos">
+                        <span t-field="company.report_footer"/>
+                    </div>
+                </t>
+
+                <div t-if="report_type == 'pdf'" class="text-muted">
+                  <ul class="list-inline" style="font-size:12px;">
+                    <li t-if="company.phone" class="text-left list-inline-item d-inline">Page: <span class="page"/> of <span class="topage"/></li>|
+                    <li style="padding-left:20px;padding-right:20px;" t-if="company.phone" class="list-inline-item d-inline">
+                        This is a computer generated document and electronically signed.</li>|
+                    <li t-if="company.phone" class="text-right list-inline-item d-inline"><t t-esc="o.name"/></li>
+                  </ul>
+                </div>
+
+            </div>
+        </div>
+    </template>
+	
+	<template id="bs_external_layout">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+        <t t-call="buildmart.bs_external_layout_clean">
+            <t t-raw="0"/>
+            <!--<t t-set="doc" t-value="o or doc"/>-->
+            <t t-set="report_model" t-value="report_model"/>
+        </t>
+
+
+    </template>
+
+    <template id="account_reports.main_template_with_filter_input_partner"
+              inherit_id="account_reports.main_template_with_filter_input_accounts"  primary="True"/>
+    <template id="account_reports.main_template_with_filter_input_accounts" inherit_id="account_reports.main_template"
+              primary="True"/>
+
+    <template id="bs_main_template" inherit_id="account_reports.main_template">
+        <xpath expr="//div[@id='warnings_div']" position="replace">
+            <div id="warnings_div"/>
+        </xpath>
+
+        <xpath expr="//div[hasclass('o_account_reports_header')]" position="replace">
+        	<div class="print_only"><h2><t t-esc="report.get('name')"/></h2></div>
+              <t t-if="report.get('name') != 'Partner Ledger' ">
+              	<t t-call="account_reports.filter_info_template"/>
+              </t>
+              <t t-if="report.get('name') == 'Partner Ledger' ">
+	            <table style="width:100%;">
+	                <tr>
+	                    <td style="width:30%;vertical-align: top;padding-right:5px;">
+	                        <b>
+                                <t t-if="options.get('partner_ids') != None">
+                                    <t t-set="res_partner_value">All</t>
+                                    <t t-foreach="options['selected_partner_ids']" t-as="partner_name">
+                                        <t t-set="res_partner_value" t-value="''"/>
+                                        <t t-esc="partner_name"/>
+                                    </t>
+                                    <t t-esc="res_partner_value"/>
+                                </t>
+                            </b><br/>
+                            <t t-if="options['cust_code']"><b>Customer Code: </b><t t-esc="options['cust_code']"/><br/></t>
+	                        <t t-if="options['cust_vat']"><b>GSTIN: </b><t t-esc="options['cust_vat']"/><br/></t>
+	                        <t t-if="options['cust_address']"><b>Address: </b><t t-esc="options['cust_address']"/><br/></t>
+	                        <t t-if="options['cust_type']"><b>Type: </b><t t-esc="options['cust_type']"/><br/></t>
+	                        <t t-if="options['cust_contact']"><b>Contact: </b><t t-esc="options['cust_contact']"/></t>
+	                    </td>
+	                    <td style="width:35%;vertical-align: top;padding-right:5px;">
+	                        <b>Account Statement for the period:</b>
+	                        <t t-if="options.get('date') and options['date'].get('string')">
+	                            <t t-esc="datetime.datetime.strptime(options.get('date').get('date_from'),'%Y-%m-%d').strftime('%d-%B-%Y')
+	                             + ' to ' +
+	                             datetime.datetime.strptime(options.get('date').get('date_to'),'%Y-%m-%d').strftime('%d-%B-%Y')"/>
+	                        </t><br/>
+	                        <t t-if="options['cust_accts_poc']">
+	                            <b>Accounts Dept. Contact details:</b><br/>
+                                <t t-esc="options['cust_accts_poc']"/>
+	                        </t>
+	                        <t t-if="options['cust_sales_poc']">
+	                            <b>Sales Officer Contact Details:</b><br/>
+	                            <t t-esc="options['cust_sales_poc']"/>
+	                        </t>
+	                    </td>
+	                    <td style="width:35%;vertical-align: top;">
+	                        <t t-call="buildmart.bs_partner_address">
+	                            <t t-set="company" t-value="res_company"/>
+	                        </t>
+	                    </td>
+	                </tr>
+	            </table>
+	         </t>
+        </xpath>
+    </template>
+    
+</odoo>

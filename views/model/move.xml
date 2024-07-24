@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+         <!-- Account.move - inherited -->
+        <record id="bs_acct_move_tree" model="ir.ui.view">
+	        <field name='name'>account.move.tree</field>
+	        <field name="model">account.move</field>
+	        <field name="inherit_id" ref="account.view_out_invoice_tree"/>
+	        <field name="arch" type="xml">
+                <field name="invoice_partner_display_name" position="before">
+                    <field name="partner_code" optional="hide"/>
+                </field>
+                <xpath expr="//field[@name='invoice_date']" position="before">
+                    <field name="vat" optional="hide"/>
+                    <field name="bs_acct_no" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="bs_in_inv_tree" model="ir.ui.view">
+	        <field name='name'>bs.in.account.move.tree</field>
+	        <field name="model">account.move</field>
+	        <field name="inherit_id" ref="account.view_in_invoice_tree"/>
+	        <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_partner_display_name']" position="after">
+                    <field name="vat" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="bs_acct_move_form_id" model="ir.ui.view">
+	        <field name='name'>account.move.form</field>
+	        <field name="model">account.move</field>
+	        <field name="inherit_id" ref="account.view_move_form"/>
+	        <field name="arch" type="xml">
+                <xpath expr="//notebook/page[@name='other_info']/group/group/label" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='ref'][last()]" position="replace"/>
+                <xpath expr="//header/button[last()]" position="after">
+                    <button name="action_authorize_digitally" type='object' class="oe_highlight"
+                        string='Verify' groups="buildmart.group_account_authorize"
+                        help="Verified Invoice, will allow to print Invoice with pre-set Signatory."
+                        attrs="{'invisible': [('show_authorize','!=', True)]}"/>
+                    <button name="invoice_amendend_print" type="object" string="Print Amendend Invoice"
+                            attrs="{'invisible':['|',('is_move_sent','!=',False), ('state', '!=', 'posted')]}"
+                            groups="buildmart.group_account_authorize"/>
+                </xpath>
+                <field name="narration" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <xpath expr="//field[@name='invoice_date']" position="after">
+                    <field name="ref" string="PO Reference"
+                           attrs="{'required':[('move_type','=','out_invoice'),('state','=','draft')],
+                                    'invisible':[('move_type','!=','out_invoice')]}"/>
+                    <field name="ref_date"
+                           attrs="{'required':[('move_type','=','out_invoice'),('state','=','draft')],
+                                    'invisible':[('move_type','!=','out_invoice')]}"/>
+                </xpath>
+                <xpath expr="//div[@name='journal_div']" position="after">
+                    <field name="show_authorize" invisible="1"/>
+                    <field name="authorized_by" readonly="1" attrs="{'invisible':[('authorized_by','=',False)]}"/>
+                    <field name="arn_id" readonly="1"/>
+                    <field name="eway_bill_no" />
+                    <field name="vehicle_no"/>
+                    <field name="driver_no"/>
+                </xpath>
+                <xpath expr="//page[last()]" position="after">
+                    <page name="t_and_c" string="T&amp;C">
+                        <field name="t_and_c" required="1">
+                            <tree editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="is_selected"/>
+                                <field name="category"/>
+                                <field name="tandc_id" required="1"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+                <xpath expr="//field[@name='partner_shipping_id']" position="before">
+                    <field name="sitename_id"
+                           attrs="{'invisible':[('move_type','!=','out_invoice')]}"
+                           domain="[('company_id', '=', partner_id)]"
+                           options="{'no_create': True}"/>
+                </xpath>
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='quantity']" position="replace">
+                	<field name="quantity" sum="Total"/>
+            	</xpath>
+                <xpath expr="//page[@id='aml_tab']/field/tree/field[@name='partner_id']" position="after">
+                    <field name="sitename_id" domain="[('company_id', '=', partner_id)]"/>
+                </xpath>
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='name']" position="after">
+                    <field name="hsn_code"/>
+            	</xpath>
+            	
+            	<xpath expr="//field[@name='partner_shipping_id']" position="attributes">
+            		<attribute name="required">0</attribute>
+            		<attribute name="domain">[('parent_id','=',partner_id),('type','=','delivery')]</attribute>
+            	</xpath>
+                <!--<field name="partner_shipping_id" position="attributes">
+                    <attribute name="context">{'show_address': 1}</attribute>
+                </field>-->
+	        </field>
+	    </record>
+        <record id="bs_sale_move_form" model="ir.ui.view">
+	        <field name='name'>sale.account.move.form</field>
+	        <field name="model">account.move</field>
+	        <field name="inherit_id" ref="sale.account_invoice_form"/>
+	        <field name="arch" type="xml">
+                <field name="partner_shipping_id" position="attributes">
+                    <attribute name="context">{'show_address': 1}</attribute>
+                </field>
+	        </field>
+	    </record>
+         <record id="bs_acct_payment_form" model="ir.ui.view">
+	        <field name='name'>account.payment.form</field>
+	        <field name="model">account.payment</field>
+	        <field name="inherit_id" ref="account.view_account_payment_form"/>
+	        <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="sitename_id" attrs="{'invisible':[('payment_type','=','outbound')]}"
+                    domain="[('company_id', '=', partner_id)]" options="{'no_create': True}"/>
+                </xpath>
+            </field>
+         </record>
+
+         <!-- bs partner ledger menu -->
+        <record id="bs_action_account_report_partner_ledger" model="ir.actions.client">
+            <field name="name">Partner Ledger</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'account.partner.ledger','ledger_type':'bs'}" />
+        </record>
+        <menuitem id="menu_action_account_report_bs_partner_ledger" name="BS Partner Ledger" action="bs_action_account_report_partner_ledger" parent="account_reports.account_reports_partners_reports_menu" groups="account.group_account_readonly"/>
+
+        <template id="bs_search_template_date_filter" inherit_id="account_reports.search_template_date_filter">
+            <xpath expr="//div/t/div[hasclass('dropdown-divider')]" position="before">
+                <a role="menuitem" class="dropdown-item js_account_report_date_filter" title="This FY till Today"
+                   data-filter="this_year_today">
+                    This FY till Today
+                </a>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

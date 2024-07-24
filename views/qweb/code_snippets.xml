@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <!-- Generic - Company address; Used in report -->
+        <template id="bs_partner_address">
+            <t t-if="company">
+                <t t-if="company.name">
+                    <b><t t-esc="company.name"/></b><br/>
+                </t>
+                <t t-if="company.street"><t t-esc="company.street"/></t><br/>
+                <t t-if="company.street2"><t t-esc="company.street2"/>,</t><br/>
+                <t t-if="company.city"><t t-esc="company.city"/> <t t-esc="company.zip"/>,</t>
+                <t t-if="company.state_id">
+                    <t t-esc="company.state_id.name"/>&amp;nbsp;(<t t-esc="company.state_id.l10n_in_tin"/>),
+                    <t t-esc="company.country_id.code"/>
+                </t><br/>
+                <t t-if="company.phone">
+                    <i class="fa fa-phone fa-fw"/> <t t-esc="company.phone"/>,</t>
+                <t t-if="company.email"><i class="fa fa-envelope fa-fw"/><t t-esc="company.email"/></t><br/>
+                <div style="font-size:15px;font-weight:bold;">
+                    <t t-if="company.vat">GSTIN: <t t-esc="company.vat"/></t>
+                </div>
+            </t>
+        </template>
+        
+        <template id="bs_partner_address_invoice">
+            <t t-if="company">
+                <t t-if="company.name">
+                    <b><t style="font-size:18px;" t-esc="company.name"/></b><br/>
+                </t>
+                <t t-if="company.street"><t t-esc="company.street"/><br /></t>
+                <t t-if="company.street2"><t t-esc="company.street2"/>,<br /></t>
+                <t t-if="company.city"><t t-esc="company.city"/> <t t-esc="company.zip"/>,</t>
+                <t t-if="company.state_id">
+                    <t t-esc="company.state_id.name"/>&amp;nbsp;(<t t-esc="company.state_id.l10n_in_tin"/>), <t t-esc="company.country_id.code"/>
+                </t><br/>
+                <t t-if="company.phone">
+                    <i class="fa fa-phone fa-fw"/> <t t-esc="company.phone"/>,</t>
+                <t t-if="company.email"><i class="fa fa-envelope fa-fw"/><t t-esc="company.email"/></t><br/>
+                <div style="font-size:15px;font-weight:bold;">
+                    <t t-if="company.vat">GSTIN: <t t-esc="company.vat"/></t>
+                </div>
+            </t>
+        </template>
+
+
+        <template id="bs_compact_address">
+            <t t-if="partner">
+            	<t t-set="childObjs" t-value="partner.child_ids.filtered(lambda c: c.type == 'delivery')" />
+            	<fieldset id="group1">
+            	    <span t-foreach="partner.child_ids" t-as="ship_addes">
+            	    
+            	    	<input type="radio" name="group1" t-att-value="ship_addes.id" t-att-checked="'checked' if ship_addes.is_default_addr else None">
+            	    		<t t-esc="ship_addes.name"/>
+			                <t t-if="ship_addes.sitename_id">,&amp;nbsp<t t-esc="ship_addes.sitename_id.name"/></t>
+			                <t t-if="ship_addes.street">,&amp;nbsp<t t-esc="ship_addes.street"/></t>
+			                <t t-if="ship_addes.street2">,&amp;nbsp<t t-esc="ship_addes.street2"/></t>
+			                <t t-if="ship_addes.city">,&amp;nbsp<t t-esc="ship_addes.city"/></t>
+			                <t t-if="ship_addes.landmark">,&amp;nbsp<t t-esc="ship_addes.landmark"/></t>
+			                <t t-if="ship_addes.district_id">,&amp;nbsp<t t-esc="ship_addes.district_id.name"/></t>
+			                <t t-if="ship_addes.state_id">,&amp;nbsp<t t-esc="ship_addes.state_id.name"/></t>
+			                <t t-if="ship_addes.zip">,&amp;nbsp<t t-esc="ship_addes.zip"/></t>
+			                <t t-if="ship_addes.country_id">,&amp;nbsp<t t-esc="ship_addes.country_id.name"/></t>
+            	    	</input><br/>
+            	    </span>
+				 </fieldset>
+            	
+                <!-- <t t-esc="partner.name"/>
+                <t t-if="partner.sitename_id">,&amp;nbsp<t t-esc="partner.sitename_id.name"/></t>
+                <t t-if="partner.street">,&amp;nbsp<t t-esc="partner.street"/></t>
+                <t t-if="partner.street2">,&amp;nbsp<t t-esc="partner.street2"/></t>
+                <t t-if="partner.city">,&amp;nbsp<t t-esc="partner.city"/></t>
+                <t t-if="partner.landmark">,&amp;nbsp<t t-esc="partner.landmark"/></t>
+                <t t-if="partner.district_id">,&amp;nbsp<t t-esc="partner.district_id.name"/></t>
+                <t t-if="partner.state_id">,&amp;nbsp<t t-esc="partner.state_id.name"/></t>
+                <t t-if="partner.zip">,&amp;nbsp<t t-esc="partner.zip"/></t>
+                <t t-if="partner.country_id">,&amp;nbsp<t t-esc="partner.country_id.name"/></t> -->
+            </t>
+        </template>
+
+</odoo>

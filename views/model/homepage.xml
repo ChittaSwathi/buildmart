@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="bs_homepage_tree_id" model="ir.ui.view">
+            <field name="name">bs.website.homepage.tree</field>
+            <field name="model">bs.homepage</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="website_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="bs_homepage_form_id" model="ir.ui.view">
+            <field name="name">bs.website.homepage.form</field>
+            <field name="model">bs.homepage</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="website_id" required="1"/>
+                            <field name="company_id" required="1"/>
+                        </group>
+                        <notebook>
+                            <page name="homepage" string="Homepage">
+                               <field name="banner_ids" class="o_website_sale_image_list"
+                                       mode="kanban" options="{'create_text':'Add a Media'}" nolabel="1"/>
+
+                                <group>
+                                    <field name="top_category_ids">
+                                        <tree editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="category_id" required="1" />
+                                            <field name="label"/>
+                                            <field name="s3_url"/>
+                                            <field name="image" widget="image"/>
+                                        </tree>
+                                    </field>
+                                    <field name="hot_deals_label"/>
+                                    <field name="hot_deal_ids">
+                                        <tree editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="product_id" required="1" />
+                                            <field name="label"/>
+                                            <field name="s3_url"/>
+                                            <field name="image" widget="image"/>
+                                        </tree>
+                                    </field>
+                                    <field name="best_selling_label"/>
+                                    <field name="best_selling_ids">
+                                        <tree editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="product_id" required="1" />
+                                            <field name="label"/>
+                                            <field name="s3_url"/>
+                                            <field name="image" widget="image"/>
+                                        </tree>
+                                    </field>
+                                    <field name="cement_brand_label"/>
+                                    <field name="cement_brand_ids">
+                                        <tree editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="brand_id" required="1" />
+                                            <field name="label"/>
+                                            <field name="s3_url"/>
+                                            <field name="image" widget="image"/>
+                                        </tree>
+                                    </field>
+                                    <field name="safety_category_label"/>
+                                    <field name="safety_category_ids">
+                                        <tree editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="category_id" required="1" />
+                                            <field name="label"/>
+                                            <field name="s3_url"/>
+                                            <field name="image" widget="image"/>
+                                        </tree>
+                                    </field>
+                                    <field name="safety_brand_label"/>
+                                    <field name="safety_brand_ids">
+                                        <tree editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="brand_id" required="1" />
+                                            <field name="label"/>
+                                            <field name="s3_url"/>
+                                            <field name="image" widget="image"/>
+                                        </tree>
+                                    </field>
+                                    <field name="trending_product_label"/>
+                                    <field name="trending_product_ids">
+                                        <tree editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="product_id" required="1" />
+                                            <field name="label"/>
+                                            <field name="s3_url"/>
+                                            <field name="image" widget="image"/>
+                                        </tree>
+                                    </field>
+                                    <field name="steel_brand_label"/>
+                                    <field name="steel_brand_ids">
+                                        <tree editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="brand_id" required="1" />
+                                            <field name="label"/>
+                                            <field name="s3_url"/>
+                                            <field name="image" widget="image"/>
+                                        </tree>
+                                    </field>
+                                    <field name="top_blocks_label"/>
+                                     <field name="top_block_ids">
+                                        <tree editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="product_id" required="1" />
+                                            <field name="label"/>
+                                            <field name="s3_url"/>
+                                            <field name="image" widget="image"/>
+                                        </tree>
+                                    </field>
+                                    <field name="block_brand_label"/>
+                                     <field name="block_brand_ids">
+                                        <tree editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="brand_id" required="1" />
+                                            <field name="label"/>
+                                            <field name="s3_url"/>
+                                            <field name="image" widget="image"/>
+                                        </tree>
+                                    </field>
+                                    <field name="our_seller_ids">
+                                        <tree editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="partner_id" required="1" domain="[('supplier_rank','>',0)]"/>
+                                        </tree>
+                                    </field>
+                                    <field name="our_brand_ids">
+                                        <tree editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="brand_id" required="1" domain="[('attribute_id', '=', %(buildmart.brand_attribute)d)]"/>
+                                        </tree>
+                                    </field>
+                                    <field name="client_review_ids">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="client_id" required="1"/>
+                                        <field name="name" required="1"/>
+                                        <field name="review" required="1"/>
+                                    </tree>
+                                </field>
+                                </group>
+                            </page>
+                            <page name="search" string="Header Search">
+                                <field name="header_search_ids">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle" />
+                                        <field name="name"/>
+                                        <field name="categ_ids" widget="many2many_tags"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page name="links" string="Footer Links">
+                                <label for="footer_link_ids" string="Best Selling Links"/>
+                                <field name="footer_link_ids">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="page_url"/>
+                                    </tree>
+                                    <form>
+                                        <group>
+                                            <field name="name" required="1"/>
+                                            <field name="page_url" />
+                                            <field name="link_ids" required="1">
+                                                <tree editable="bottom">
+                                                    <field name="sequence" widget="handle"/>
+                                                    <field name="name" required="1"/>
+                                                    <field name="page_url"/>
+                                                </tree>
+                                            </field>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="bs_homepage_action" model="ir.actions.act_window">
+            <field name="name">Homepage</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">bs.homepage</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="buildmart.bs_homepage_tree_id"/>
+        </record>
+
+        <menuitem id="bs_homepage_menu" action="buildmart.bs_homepage_action" parent="website.menu_dashboard"
+            name="Homepage" />
+</odoo>
